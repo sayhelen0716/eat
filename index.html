@@ -8,6 +8,8 @@
 <meta name="theme-color" content="#F1F4EC" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#131712" media="(prefers-color-scheme: dark)">
 <title>蘸酱饭桌</title>
+<link rel="icon" type="image/svg+xml" href="logo.svg">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="蘸酱饭桌">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -276,6 +278,14 @@ details.adj summary::-webkit-details-marker{display:none}
 .lg-mx{width:30px;height:30px;border-radius:8px;background:var(--sunk);display:grid;place-items:center}
 .lg-cal{display:flex;gap:3px}.lg-cal span{width:16px;height:18px;border-radius:5px;display:block}
 .lg-cal .t-g{background:var(--g-soft)}.lg-cal .t-y{background:var(--y-soft)}.lg-cal .t-r{background:var(--r-soft)}
+
+/* 品牌 */
+.brandbar{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:40px;padding-top:4px}
+.brand{display:inline-flex;align-items:center;gap:8px;font-family:var(--display);font-size:20px;letter-spacing:.04em}
+.brandmark{width:28px;height:28px;border-radius:7px;flex:none;vertical-align:middle}
+.vhead h1{display:inline-flex;align-items:center;gap:10px}
+.vhead h1 .brandmark{width:30px;height:30px}
+.back-today{min-height:36px;padding:0 14px;border-radius:18px;background:var(--accent);color:var(--on-accent);font-size:14px;font-weight:600;box-shadow:0 2px 8px rgb(0 0 0 / .15)}
 
 @media (prefers-reduced-motion:no-preference){
   .sheet{transition:transform .28s cubic-bezier(.2,.8,.2,1)}
@@ -595,6 +605,7 @@ function renderToday(){
   const rel=offset===0?'今天':offset===1?'明天':offset===-1?'昨天':(offset>0?offset+' 天后':(-offset)+' 天前');
   const snacks=SNACK.filter(s=>resolve(s).missing.length===0);
   v.innerHTML=`
+  <div class="brandbar"><span class="brand"><img src="logo.svg" alt="" class="brandmark">蘸酱饭桌</span>${offset!==0?`<button class="back-today" id="back-today">↩ 回今天</button>`:''}</div>
   <div class="daynav">
     <button id="prev-day" aria-label="前一天">‹</button>
     <div class="when"><strong>${rel}</strong><span class="sub num">${info.date.getMonth()+1}月${info.date.getDate()}日 ${WD[info.date.getDay()]} · 第 ${Math.ceil(info.n/7)} 周第 ${info.n} 天</span></div>
@@ -620,6 +631,7 @@ function renderToday(){
     <div class="scroller">${snacks.length?snacks.map(s=>`<span class="snk">${s.need.map(([k])=>ico(k,30)).join('')}<span>${esc(s.n)}</span></span>`).join(''):'<span class="sub">无 → 冰箱 勾选</span>'}</div>
   </div>`;
   document.getElementById('prev-day').onclick=()=>{offset--;renderToday()};
+  const bt=document.getElementById('back-today');if(bt)bt.onclick=()=>{offset=0;renderToday()};
   document.getElementById('next-day').onclick=()=>{offset++;renderToday()};
   document.getElementById('open-dish').onclick=()=>dishSheet(dish);
   const ob=document.getElementById('open-buy');if(ob)ob.onclick=()=>listSheet('今天买菜',buy);
@@ -700,7 +712,7 @@ function renderFridge(){
       <div class="sechead"><h2>加餐</h2></div>
       <div class="scroller">${snacks.map(s=>`<span class="snk">${s.need.map(([k])=>ico(k,30)).join('')}<span>${esc(s.n)}</span></span>`).join('')||'<span class="sub">无</span>'}</div>`;
   }
-  v.innerHTML=`<div class="vhead"><h1>冰箱</h1><a class="toplink" href="#legend">图例 ›</a></div>${seg}${body}`;
+  v.innerHTML=`<div class="vhead"><h1><img src="logo.svg" alt="" class="brandmark">冰箱</h1><a class="toplink" href="#legend">图例 ›</a></div>${seg}${body}`;
 
   const cta=document.getElementById('cta');
   cta.hidden=!(S.fview==='have'&&location.hash==='#fridge');
@@ -755,7 +767,7 @@ function renderMonth(){
       ${Object.keys(BUY).map(Number).map(n=>`<div class="card"><div class="sechead"><h2>第 ${weekOf(n)} 周 · 第 ${n} 天</h2><span class="icons">${buyIcons(BUY[n]).slice(0,5).map(id=>ico(id,22)).join('')}</span></div>
         <ul class="checks">${BUY[n].map((it,i)=>ck(`b${n}-${i}`,it)).join('')}</ul></div>`).join('')}`;
   }
-  v.innerHTML=`<div class="vhead"><h1>月菜单</h1><span class="sub">4 周 · 28 道</span></div>${seg}${body}`;
+  v.innerHTML=`<div class="vhead"><h1><img src="logo.svg" alt="" class="brandmark">月菜单</h1><span class="sub">4 周 · 28 道</span></div>${seg}${body}`;
   v.querySelectorAll('[data-mv]').forEach(b=>b.onclick=()=>{S.mview=b.dataset.mv;save();renderMonth()});
   v.querySelectorAll('[data-day]').forEach(b=>b.onclick=()=>dishSheet(dayDish(+b.dataset.day)));
   const sd=document.getElementById('start-date');if(sd)sd.onchange=e=>{if(e.target.value){S.start=e.target.value;save();offset=0;renderToday();renderMonth()}};
@@ -783,7 +795,7 @@ function renderLegend(){
   const demo={d:-1,n:'',t:'g',need:[['lettuce',''],['cucumber',''],['tofu',''],['rice','']]};
   const sym=(g,t,d)=>`<div class="lg-row"><span class="lg-g">${g}</span><span class="lg-t"><strong>${t}</strong><span>${d}</span></span></div>`;
   v.innerHTML=`
-  <div class="vhead"><h1>图例</h1><a class="toplink" href="#fridge">‹ 冰箱</a></div>
+  <div class="vhead"><h1><img src="logo.svg" alt="" class="brandmark">图例</h1><a class="toplink" href="#fridge">‹ 冰箱</a></div>
   <div class="card lg-plate">
     <div class="lg-plate-fig">${plate(demo,150,true)}</div>
     <div class="lg-plate-tx">
@@ -834,6 +846,7 @@ function route(){
 }
 document.getElementById('cta-btn').onclick=()=>{S.fview='can';save();renderFridge();document.getElementById('cta').hidden=true;window.scrollTo(0,0)};
 window.addEventListener('hashchange',route);
+document.querySelector('.tabbar a[data-tab="today"]').addEventListener('click',()=>{if(offset!==0){offset=0;renderToday()}});
 renderToday();renderFridge();renderMonth();renderLegend();route();
 </script>
 </body>
