@@ -206,8 +206,8 @@ body.sheet-open{overflow:hidden}
 .flow li:first-child{border-top:0}
 .flow li::before{counter-increment:f;content:counter(f);width:24px;height:24px;border-radius:12px;background:var(--accent-soft);color:var(--accent);font-size:12px;font-weight:700;display:grid;place-items:center}
 .fx{display:flex;flex-wrap:wrap;align-items:center;gap:2px 6px;font-size:16px;font-weight:500}
-.yes{color:var(--g);font-weight:700;background:var(--g-soft);padding:0 7px;border-radius:6px}
-.no{color:var(--r);font-weight:700;background:var(--r-soft);padding:0 7px;border-radius:6px;text-decoration:line-through;text-decoration-thickness:1.5px}
+.yes{white-space:nowrap;color:var(--g);font-weight:700;background:var(--g-soft);padding:0 7px;border-radius:6px}
+.no{white-space:nowrap;color:var(--r);font-weight:700;background:var(--r-soft);padding:0 7px;border-radius:6px;text-decoration:line-through;text-decoration-thickness:1.5px}
 .arr{color:var(--muted)}
 
 /* 加餐 */
@@ -252,6 +252,30 @@ button.mx-h:active{background:var(--sunk)}
 details.adj summary{list-style:none;cursor:pointer}
 details.adj summary::-webkit-details-marker{display:none}
 
+/* 图例 */
+.toplink{font-size:15px;color:var(--accent);font-weight:600;text-decoration:none;min-height:36px;display:inline-flex;align-items:center}
+.lg-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:8px}
+.lg-card{display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 6px 10px;border-radius:14px;background:var(--surface);border:1px solid var(--line);text-align:center}
+.lg-card:active{transform:scale(.97)}
+.lg-card strong{font-size:14px;font-weight:600}
+.lg-tags{display:flex;flex-wrap:wrap;justify-content:center;gap:4px}
+.lg-k,.lg-s{font-size:11px;padding:0 6px;border-radius:6px;line-height:18px}
+.lg-fresh{background:var(--r-soft);color:var(--r)}.lg-keep{background:var(--g-soft);color:var(--g)}.lg-frozen{background:var(--y-soft);color:var(--y)}
+.lg-s{background:var(--sunk);color:var(--muted)}
+.lg-n{font-size:11px;color:var(--muted)}
+.lg-plate{flex-direction:row;align-items:center;flex-wrap:wrap}
+.lg-plate-tx{display:flex;flex-direction:column;gap:6px;font-size:14px;flex:1;min-width:150px}
+.lg-dot{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px;border:1px solid var(--line)}
+.lg-row{display:grid;grid-template-columns:92px minmax(0,1fr);gap:12px;align-items:center;padding-block:8px;border-top:1px solid var(--line)}
+.lg-row:nth-child(2){border-top:0}
+.lg-g{display:flex;align-items:center;justify-content:center;gap:4px;font-size:22px}
+.lg-g .yes,.lg-g .no{font-size:14px;white-space:nowrap}
+.lg-t{display:flex;flex-direction:column;line-height:1.35}
+.lg-t strong{font-size:15px}.lg-t span{font-size:13px;color:var(--muted)}
+.lg-mx{width:30px;height:30px;border-radius:8px;background:var(--sunk);display:grid;place-items:center}
+.lg-cal{display:flex;gap:3px}.lg-cal span{width:16px;height:18px;border-radius:5px;display:block}
+.lg-cal .t-g{background:var(--g-soft)}.lg-cal .t-y{background:var(--y-soft)}.lg-cal .t-r{background:var(--r-soft)}
+
 @media (prefers-reduced-motion:no-preference){
   .sheet{transition:transform .28s cubic-bezier(.2,.8,.2,1)}
   .scrim{transition:opacity .2s}
@@ -269,6 +293,7 @@ img{max-width:100%}
     <section class="view" id="v-today"></section>
     <section class="view" id="v-fridge" hidden></section>
     <section class="view" id="v-month" hidden></section>
+    <section class="view" id="v-legend" hidden></section>
   </main>
 </div>
 <div class="cta" id="cta" hidden><button id="cta-btn" type="button"></button></div>
@@ -476,8 +501,8 @@ const SLOTS_HALF={1:[[0,.56]],2:[[-32,.6],[32,.6]],3:[[-48,.62],[0,.62],[48,.62]
 const SLOTS_QTR={1:[[0,.56]],2:[[-21,.6],[21,.6]],3:[[-25,.68],[25,.68],[0,.4]],4:[[-26,.7],[26,.7],[-20,.42],[20,.42]]};
 const SEC_DEF=[{k:'veg',a:-90,n:'菜',slots:SLOTS_HALF,max:6},{k:'pro',a:45,n:'肉蛋豆',slots:SLOTS_QTR,max:4},{k:'carb',a:135,n:'饭',slots:SLOTS_QTR,max:4}];
 const secOf=id=>SEC_DEF.find(s=>SECT[s.k].includes(id)).k;
-function plate(dish,size){
-  const r=resolve(dish);const R=size/2;
+function plate(dish,size,demo=false){
+  const r=demo?{rows:dish.need.map(([id])=>({id,n:I[id].n,ok:true}))}:resolve(dish);const R=size/2;
   const isz=Math.round(size*0.14);
   const pt=(deg,rf)=>{const a=deg*Math.PI/180;return [R+Math.cos(a)*R*rf,R+Math.sin(a)*R*rf]};
   const divs=[0,90,180].map(d=>{const [x1,y1]=pt(d,.15),[x2,y2]=pt(d,.9);return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"/>`}).join('');
@@ -651,7 +676,7 @@ function renderFridge(){
       <div class="sechead"><h2>加餐</h2></div>
       <div class="scroller">${snacks.map(s=>`<span class="snk">${s.need.map(([k])=>ico(k,30)).join('')}<span>${esc(s.n)}</span></span>`).join('')||'<span class="sub">无</span>'}</div>`;
   }
-  v.innerHTML=`<div class="vhead"><h1>冰箱</h1><span class="sub num">已勾 ${S.have.length} 样</span></div>${seg}${body}`;
+  v.innerHTML=`<div class="vhead"><h1>冰箱</h1><a class="toplink" href="#legend">图例 ›</a></div>${seg}${body}`;
 
   const cta=document.getElementById('cta');
   cta.hidden=!(S.fview==='have'&&location.hash==='#fridge');
@@ -714,18 +739,76 @@ function renderMonth(){
   const rc=document.getElementById('reset-checks');if(rc)rc.onclick=()=>{S.checks={};save();renderMonth()};
 }
 
+/* ---------- 图例 ---------- */
+function dishesUsing(id){return DISH.filter(d=>[...d.need.map(([k])=>k),...(d.opt||[]).map(([k])=>k)].some(k=>k.split('|').includes(id)))}
+function renderLegend(){
+  const v=document.getElementById('v-legend');
+  const secs=[{k:'veg',n:'菜',f:'½ 盘'},{k:'pro',n:'肉蛋豆',f:'¼ 盘'},{k:'carb',n:'饭',f:'¼ 盘'}];
+  const keep={fresh:'短保',keep:'耐放',frozen:'冷冻'};
+  const ingCards=secs.map(sec=>`
+    <div class="group">
+      <h2>${sec.n}<small>${sec.f}</small></h2>
+      <div class="lg-grid">${ING.filter(x=>secOf(x.id)===sec.k).map(x=>{const n=dishesUsing(x.id).length;return `
+        <button class="lg-card" data-lg="${x.id}" aria-label="${esc(x.n)}，用在 ${n} 道菜">
+          ${ico(x.id,52)}
+          <strong>${esc(x.n.replace(/（.*）/,''))}</strong>
+          <span class="lg-tags"><span class="lg-k lg-${x.c}">${keep[x.c]}</span>${x.serv?`<span class="lg-s">${esc(x.unit)}≈${x.serv} 顿</span>`:''}</span>
+          <span class="lg-n num">${n?n+' 道菜':'加餐'}</span>
+        </button>`}).join('')}</div>
+    </div>`).join('');
+  const demo={d:-1,n:'',t:'g',need:[['lettuce',''],['cucumber',''],['tofu',''],['rice','']]};
+  const sym=(g,t,d)=>`<div class="lg-row"><span class="lg-g">${g}</span><span class="lg-t"><strong>${t}</strong><span>${d}</span></span></div>`;
+  v.innerHTML=`
+  <div class="vhead"><h1>图例</h1><a class="toplink" href="#fridge">‹ 冰箱</a></div>
+  <div class="card lg-plate">
+    <div class="lg-plate-fig">${plate(demo,150,true)}</div>
+    <div class="lg-plate-tx">
+      <div class="label">餐盘</div>
+      <div>上半 · 菜 ½</div>
+      <div>右下 · 肉蛋豆 ¼</div>
+      <div>左下 · 饭 ¼</div>
+      <div class="sub">脂肪 不单列 · 来自 肉蛋 和 油 → 控</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="label">符号</div>
+    ${sym(pill('g'),'不开火','直接吃 · 或 只拌只卷')}
+    ${sym(pill('y'),'电器','空气炸锅 · 电煮锅 · 电饭锅 · 烧水')}
+    ${sym(pill('r'),'开火','炒锅 · 每周 ≤1 次')}
+    ${sym('<span class="yes">✓蘸</span> <span class="no">✗拌</span>','要 / 不要','做法里 绿=要 红=不要')}
+    ${sym('<span class="arr" style="font-size:20px">→</span>','然后','下一步 / 移到')}
+    ${sym(ico('tofu',30,'miss'),'缺','冰箱 没勾 → 灰 + 红圈')}
+    ${sym('<span class="svd" style="font-size:12px">●●●</span>','还剩几顿','短保食材 · 冰箱页')}
+    ${sym('<span class="lg-mx"><span class="mx-on"></span></span>','这顿用掉','吃完计划 矩阵')}
+    ${sym('🛒','买菜日','日历 右上 小点')}
+    ${sym('🧊','今晚解冻','冷冻 → 冷藏')}
+    ${sym('<span class="lg-cal"><span class="t-g"></span><span class="t-y"></span><span class="t-r"></span></span>','日历底色','绿 不开火 · 黄 电器 · 红 开火')}
+  </div>
+  <div class="label">食材 · 点开看 用在哪几道</div>
+  ${ingCards}`;
+  v.querySelectorAll('[data-lg]').forEach(b=>b.onclick=()=>{
+    const id=b.dataset.lg,x=I[id],ds=dishesUsing(id);
+    const sn=SNACK.filter(sk=>sk.need.some(([k])=>k===id)).map(sk=>sk.n);
+    openSheet(x.n,`
+      <div class="sheet-top">${ico(id,72)}<div class="sheet-meta"><span class="pill t-${x.c==='fresh'?'r':x.c==='frozen'?'y':'g'}">${keep[x.c]}</span>${x.serv?`<span class="sub">${esc(x.unit)} ≈ ${x.serv} 顿</span>`:''}<span class="sub">${CLS[x.c].hint}</span></div></div>
+      ${ds.length?`<div><div class="label">用在 ${ds.length} 道菜</div><div class="list">${ds.map(d=>`<button data-dish="${d.d}">${plateMini(d)}<span class="tx"><strong>${esc(d.n)}</strong><span>${d.d?'第 '+d.d+' 天':'应急'} · ${TIER[d.t]}</span></span><span class="chev">›</span></button>`).join('')}</div></div>`:''}
+      ${sn.length?`<div><div class="label">加餐</div><div class="chips">${sn.map(n=>`<span class="snk">${esc(n)}</span>`).join('')}</div></div>`:''}`);
+    document.querySelectorAll('#sheet-body [data-dish]').forEach(el=>el.onclick=()=>dishSheet(DISH.find(d=>String(d.d)===el.dataset.dish)));
+  });
+}
+
 /* ---------- 路由 ---------- */
 function route(){
   const tab=(location.hash||'#today').slice(1);
-  const t=['today','fridge','month'].includes(tab)?tab:'today';
-  ['today','fridge','month'].forEach(x=>document.getElementById('v-'+x).hidden=x!==t);
+  const t=['today','fridge','month','legend'].includes(tab)?tab:'today';
+  ['today','fridge','month','legend'].forEach(x=>document.getElementById('v-'+x).hidden=x!==t);
   document.querySelectorAll('.tabbar a').forEach(a=>a.setAttribute('aria-current',a.dataset.tab===t?'page':'false'));
   document.getElementById('cta').hidden=!(t==='fridge'&&S.fview==='have');
   closeSheet();window.scrollTo(0,0);
 }
 document.getElementById('cta-btn').onclick=()=>{S.fview='can';save();renderFridge();document.getElementById('cta').hidden=true;window.scrollTo(0,0)};
 window.addEventListener('hashchange',route);
-renderToday();renderFridge();renderMonth();route();
+renderToday();renderFridge();renderMonth();renderLegend();route();
 </script>
 </body>
 </html>
