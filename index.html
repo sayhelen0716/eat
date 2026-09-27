@@ -58,6 +58,7 @@ a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(-
 
 /* 胶囊与圆点 */
 .pill{display:inline-flex;align-items:center;gap:5px;font-size:12px;padding:2px 9px;border-radius:999px;white-space:nowrap;font-weight:600}
+.t-w{background:var(--accent-soft);color:var(--accent)}.t-p{background:var(--sunk);color:var(--ink)}
 .t-g{background:var(--g-soft);color:var(--g)}.t-y{background:var(--y-soft);color:var(--y)}.t-r{background:var(--r-soft);color:var(--r)}
 .dot{width:9px;height:9px;border-radius:50%;display:inline-block;flex:none}
 .dot.g{background:var(--g)}.dot.y{background:var(--y)}.dot.r{background:var(--r)}
@@ -327,7 +328,7 @@ const ING=[
  {id:'rawchicken',n:'生鸡胸',c:'fresh',serv:2,unit:'1 块'},
  {id:'cucumber',n:'黄瓜',c:'keep'},{id:'carrot',n:'胡萝卜',c:'keep'},{id:'scallion',n:'葱',c:'keep'},{id:'garlic',n:'蒜',c:'keep'},
  {id:'egg',n:'鸡蛋',c:'keep'},{id:'rtechicken',n:'即食鸡胸',c:'keep'},{id:'rice',n:'米饭',c:'keep'},{id:'noodles',n:'挂面',c:'keep'},
- {id:'jianbing',n:'煎饼',c:'keep'},{id:'nuts',n:'坚果包',c:'keep'},{id:'milk',n:'纯牛奶',c:'keep'},{id:'yogurt',n:'无糖酸奶',c:'keep'},
+ {id:'jianbing',n:'煎饼',c:'keep'},{id:'bread',n:'全麦面包',c:'keep'},{id:'tomato',n:'小番茄',c:'keep'},{id:'spam',n:'午餐肉',c:'keep'},{id:'nuts',n:'坚果包',c:'keep'},{id:'milk',n:'纯牛奶',c:'keep'},{id:'yogurt',n:'无糖酸奶',c:'keep'},
  {id:'fruit',n:'水果',c:'keep'},{id:'instant',n:'方便面',c:'keep'},
  {id:'shrimp',n:'虾 / 虾仁',c:'frozen'},{id:'beef',n:'肥牛卷',c:'frozen'},{id:'drumstick',n:'鸡腿',c:'frozen'},{id:'wings',n:'鸡翅',c:'frozen'},
  {id:'steak',n:'牛排',c:'frozen'},{id:'porkchop',n:'猪排',c:'frozen'},{id:'porkbelly',n:'五花肉',c:'frozen'},{id:'trotter',n:'猪蹄',c:'frozen'},{id:'ribs',n:'排骨',c:'frozen'},{id:'mince',n:'肉末',c:'frozen'},{id:'fish',n:'鱼块',c:'frozen'},
@@ -347,31 +348,35 @@ const DISH=[
  {d:7,n:'公瑾爆蛋（减糖版）',t:'r',tool:'炒锅',need:[['egg','2 个'],['garlic','3 瓣'],['scallion','1 根'],['cucumber','半根'],['rice','1 碗']]},
  {d:8,n:'煎饼卷鸡胸',t:'g',tool:'不用加热',need:[['jianbing','1 张'],['rtechicken','1 袋'],['lettuce','几片'],['cucumber','半根'],['scallion','1 根']]},
  {d:9,n:'肥牛生菜挂面',t:'y',tool:'电煮锅',need:[['noodles','1 把'],['beef','1 份'],['lettuce','1/3 颗']],opt:[['cilantro','少许']]},
- {d:10,n:'煎饼卷肥牛',t:'y',tool:'烧水',need:[['jianbing','1 张'],['beef','1 份'],['lettuce','几片'],['cucumber','半根']]},
+ {d:10,n:'白人饭 · 午餐肉',st:'w',t:'g',tool:'不用加热',need:[['bread','1–2 片'],['spam','2 片'],['lettuce','几片'],['tomato','5–6 个'],['cucumber','半根']]},
  {d:11,n:'丝瓜虾仁汤',t:'y',tool:'电煮锅',need:[['loofah','半根'],['shrimp','1 份'],['rice','1 碗']]},
  {d:12,n:'丝瓜炒蛋',t:'r',tool:'炒锅',need:[['loofah','半根'],['egg','2 个'],['rice','1 碗']]},
  {d:13,n:'空气炸鸡翅',t:'y',tool:'空气炸锅',need:[['wings','4～6 只'],['cucumber','半根'],['carrot','半根'],['rice','1 碗']]},
- {d:14,n:'虾仁挂面 · 小葱拌豆腐',t:'y',tool:'电煮锅',need:[['noodles','1 把'],['shrimp','1 份'],['silken','1 盒'],['scallion','2 根']]},
- {d:15,n:'南瓜焖饭 · 即食鸡胸',t:'y',tool:'电饭锅',need:[['pumpkin','1/3 个'],['rice','米 1 杯'],['rtechicken','1 袋']]},
+ {d:14,n:'虾仁煲仔饭 · 小葱拌豆腐',st:'p',t:'y',tool:'电饭锅',need:[['shrimp','1 份'],['rice','米 1 杯'],['silken','1 盒'],['scallion','2 根']]},
+ {d:15,st:'p',n:'南瓜焖饭 · 即食鸡胸',t:'y',tool:'电饭锅',need:[['pumpkin','1/3 个'],['rice','米 1 杯'],['rtechicken','1 袋']]},
  {d:16,n:'空气炸三文鱼 · 南瓜块',t:'y',tool:'空气炸锅',need:[['salmon','1 份'],['pumpkin','1/3 个']]},
- {d:17,n:'排骨胡萝卜焖饭',t:'y',tool:'电饭锅',need:[['ribs','1 份'],['carrot','1 根'],['rice','米 1 杯']]},
+ {d:17,n:'排骨煲仔饭',st:'p',t:'y',tool:'电饭锅',need:[['ribs','1 份'],['carrot','1 根'],['rice','米 1 杯']],opt:[['scallion','1 根']]},
  {d:18,n:'紫苏包饭 · 鱼汤',t:'y',tool:'电煮锅',need:[['fish','1 份'],['perilla','半把'],['rice','1 碗']],opt:[['scallion','1 根']]},
  {d:19,n:'烤五花肉 · 生菜紫苏包',t:'y',tool:'空气炸锅',need:[['porkbelly','1 份'],['lettuce','几片'],['garlic','3 瓣'],['rice','1 碗']],opt:[['perilla','几片']]},
  {d:20,n:'肉末蛋爆豆腐',t:'r',tool:'炒锅',need:[['mince','1 份'],['tofu','1 块'],['egg','2 个'],['scallion','1 根'],['rice','1 碗']]},
  {d:21,n:'三文鱼拌饭',t:'g',tool:'不用加热',need:[['salmon','1 份'],['cucumber','半根'],['scallion','1 根'],['rice','1 碗']],opt:[['lettuce','几片'],['perilla','几片']]},
  {d:22,n:'炖猪蹄',t:'y',tool:'电煮锅',need:[['trotter','1 只（吃一半）'],['carrot','1 根'],['scallion','1 根'],['rice','1 碗']]},
  {d:23,n:'烤猪蹄 · 生菜包',t:'y',tool:'空气炸锅',need:[['trotter','昨天剩的一半'],['lettuce','几片'],['rice','1 碗']]},
- {d:24,n:'三文鱼煎饼卷',t:'g',tool:'不用加热',need:[['salmon','1 份'],['jianbing','1 张'],['lettuce','几片'],['cucumber','半根']]},
+ {d:24,n:'白人饭 · 三文鱼',st:'w',t:'g',tool:'不用加热',need:[['bread','1–2 片'],['salmon','1 份'],['egg','1 个（现成水煮蛋）'],['lettuce','几片'],['tomato','5–6 个']]},
  {d:25,n:'白切鸡胸',t:'y',tool:'电煮锅',need:[['rawchicken','半块'],['cucumber','半根'],['scallion','1 根'],['rice','1 碗']],opt:[['lettuce','几片']]},
  {d:26,n:'凉拌鸡丝',t:'g',tool:'不用加热',need:[['rawchicken|rtechicken','半块 / 1 袋'],['cucumber','半根'],['carrot','半根'],['rice','1 碗']],opt:[['cilantro','少许']]},
  {d:27,n:'豆腐抱蛋',t:'r',tool:'炒锅',need:[['tofu','1 块'],['egg','2 个'],['shrimp','几只'],['beef','几片'],['scallion','1 根'],['rice','1 碗']],opt:[['cilantro','少许']]},
- {d:28,n:'空气炸牛排',t:'y',tool:'空气炸锅',need:[['steak','1 块'],['cucumber','半根'],['carrot','半根']]},
+ {d:28,n:'肉末鸡蛋煲仔饭',st:'p',t:'y',tool:'电饭锅',need:[['mince','1 份'],['egg','1 个'],['scallion','1 根'],['rice','米 1 杯']],opt:[['lettuce','几片']]},
  {d:101,n:'空气炸猪排',t:'y',tool:'空气炸锅',need:[['porkchop','1 块'],['lettuce','几片'],['rice','1 碗']]},
  {d:102,n:'肥牛生菜包饭',t:'y',tool:'烧水',need:[['beef','1 份'],['lettuce','1/3 颗'],['rice','1 碗']]},
  {d:103,n:'肉末蒸蛋',t:'y',tool:'电饭锅',need:[['mince','半份'],['egg','2 个'],['scallion','1 根'],['rice','1 碗']]},
  {d:104,n:'空气炸排骨',t:'y',tool:'空气炸锅',need:[['ribs','1 份'],['garlic','3 瓣'],['rice','1 碗']],opt:[['lettuce','几片']]},
  {d:105,n:'排骨胡萝卜汤',t:'y',tool:'电煮锅',need:[['ribs','1 份'],['carrot','1 根'],['scallion','1 根'],['rice','1 碗']]},
- {d:106,n:'鸡腿胡萝卜焖饭',t:'y',tool:'电饭锅',need:[['drumstick','1～2 只'],['carrot','1 根'],['rice','米 1 杯']]},
+ {d:106,n:'鸡腿煲仔饭',st:'p',t:'y',tool:'电饭锅',need:[['drumstick','1～2 只'],['carrot','1 根'],['rice','米 1 杯']]},
+ {d:107,n:'虾仁挂面',t:'y',tool:'电煮锅',need:[['noodles','1 把'],['shrimp','1 份'],['scallion','1 根']]},
+ {d:108,n:'空气炸牛排',t:'y',tool:'空气炸锅',need:[['steak','1 块'],['cucumber','半根'],['carrot','半根']]},
+ {d:109,n:'煎饼卷肥牛',t:'y',tool:'烧水',need:[['jianbing','1 张'],['beef','1 份'],['lettuce','几片'],['cucumber','半根']]},
+ {d:110,n:'三文鱼煎饼卷',t:'g',tool:'不用加热',need:[['salmon','1 份'],['jianbing','1 张'],['lettuce','几片'],['cucumber','半根']]},
  {d:0,n:'方便面（应急）',t:'y',tool:'电煮锅',need:[['instant','1 包']],opt:[['egg','1 个'],['lettuce','几片']]}
 ];
 const SNACK=[
@@ -387,21 +392,22 @@ const SNACK=[
  {n:'豆皮卷黄瓜',need:[['doupi','小半份'],['cucumber','半根']]},
  {n:'白灼虾几只',need:[['shrimp','几只']]},
  {n:'水果 1 份',need:[['fruit','1 份']]},
+ {n:'小番茄 一把',need:[['tomato','一把']]},
  {n:'半张煎饼卷生菜',need:[['jianbing','半张'],['lettuce','几片']]}
 ];
 const BUY={
  1:['生菜 1 颗','豆腐 1 块','豆皮 1 份','香菜 1 把','黄瓜 3～4 根','胡萝卜','葱'],
  4:['紫苏 1 把','生菜 1 颗'],
- 8:['生菜 1 颗','香菜 1 把','黄瓜 3～4 根','胡萝卜','葱'],
+ 8:['生菜 1 颗','小番茄 1 小盒','香菜 1 把','黄瓜 3～4 根','胡萝卜','葱'],
  11:['丝瓜 1 根','内酯豆腐 1 盒'],
  15:['小南瓜 1 个','黄瓜 3～4 根','胡萝卜','葱'],
  18:['紫苏 1 把','生菜 1 颗（小的）','豆腐 1 块'],
- 22:['生菜 1 颗','黄瓜 3～4 根','胡萝卜','葱'],
+ 22:['生菜 1 颗','小番茄 1 小盒','黄瓜 3～4 根','胡萝卜','葱'],
  25:['生鸡胸 1 块','豆腐 1 块','香菜 1 把']
 };
 const STOCK={
- '冷冻（按顿分装）':['虾仁 3～4 份','肥牛卷 4 份','鸡腿 2 只','排骨 1 份','鸡翅 1 份','牛排 1 块','五花肉 1 份','猪蹄 1 只（切块）','肉末 2 份','鱼块 1 份','刺身级三文鱼 4 份'],
- '耐放':['鸡蛋 1 盒','即食鸡胸 5 袋','挂面','煎饼','米','坚果包','常温纯牛奶'],
+ '冷冻（按顿分装）':['虾仁 3～4 份','肥牛卷 3 份','鸡腿 2 只','排骨 1 份','鸡翅 1 份','五花肉 1 份','猪蹄 1 只（切块）','肉末 2 份','鱼块 1 份','刺身级三文鱼 4 份'],
+ '耐放':['鸡蛋 1 盒','即食鸡胸 5 袋','挂面','煎饼','全麦面包（切片冷冻）','午餐肉 1 小罐','米','坚果包','常温纯牛奶'],
  '调料':['大酱','低钠生抽','醋','香油','番茄酱','芥末','黑胡椒']
 };
 
@@ -417,40 +423,44 @@ const STEPS={
  7:['料汁：生抽1 醋1 番茄酱1 水2','✗糖 ✗老抽','油少 · {egg} 煎 → 边焦','{garlic} 末 → 料汁 → 收浓'],
  8:['{jianbing} 酱 薄抹','{rtechicken} 撕','{lettuce}{cucumber}{scallion} → 卷'],
  9:['{noodles} 煮熟','{beef} 烫 → 变色','{lettuce} 最后下','盐少 · 香菜'],
- 10:['{beef} 开水烫 → 沥干','{lettuce}{cucumber} → {jianbing} 卷'],
+ 10:['{bread} 1–2 片','{spam} 2 片 · 直接 或 180℃ 5′','{lettuce}{tomato}{cucumber} 摆盘','✗酱 · 午餐肉 已够咸'],
  11:['{loofah} 去皮 · 切块','水开 → 丝瓜 2′','{shrimp} 下 → 熟','盐少'],
  12:['油少 · {egg} 炒 → 盛出','{loofah} 炒软','蛋 回锅 · 盐少'],
  13:['{wings} 划刀 · 生抽薄抹 · 黑胡椒','200℃ · 18′ · 中途翻','配 {cucumber}{carrot} 条'],
- 14:['{noodles} 煮 → {shrimp}','{silken} 倒扣 · 切块','葱花 · 生抽几滴 · 香油'],
+ 14:['米 洗 → 电饭锅 · 水 比平时少','煮饭键 → 剩 10′','＋{shrimp} 铺上 → 盖盖','酱汁：生抽1 水1 ✗糖 ✗老抽 → 淋','{silken} 倒扣 · 葱花 · 生抽几滴'],
  15:['{pumpkin} 切小块','＋米 → 电饭锅','水 比平时少','煮饭键'],
  16:['{pumpkin} 200℃ · 8′','＋{salmon} · 10′','✓黑胡椒 ✗酱'],
- 17:['{ribs} 冷水下锅 → 焯水 → 洗净','生抽少 · 黑胡椒 · 抓匀','＋{carrot} 丁 ＋米 → 电饭锅','水 比平时少','煮饭键'],
+ 17:['{ribs} 冷水下锅 → 焯水 → 洗净','生抽少 · 黑胡椒 · 抓匀','米 ＋水 比平时少 → {ribs}{carrot} 铺上','煮饭键','酱汁：生抽1 水1 ✗糖 ✗老抽 → 淋 · 葱花'],
  18:['{fish} 冷水下锅 ＋葱段','小火 20′ → 汤白','盐少','{perilla} 包饭'],
  19:['{porkbelly} 切薄片 · ✗油','200℃ · 12–15′ · 中途翻','✓油 煸出 → 倒掉','或 平底锅 ✗油 小火煎','{lettuce}{perilla} 包 肉＋蒜片'],
  20:['{tofu} 切块','{egg} 打散','油少 · {mince} 炒散 → 盛出','{tofu} 煎 → 两面黄','蛋液 淋 → 定型','肉末 回锅 · 生抽少 · 葱花'],
  21:['{salmon}{cucumber} 切丁 → 铺饭','{lettuce} 垫底 · 紫苏丝','生抽 几滴'],
  22:['{trotter} 冷水下锅 → 焯水 → 倒掉','＋{carrot} 块 ＋葱姜 ＋水 没过','小火 2h → 软烂','盐少 · 最后放','一半 → 冷藏 → 明天烤'],
  23:['{trotter} 昨天炖的 → 擦干','黑胡椒 · 生抽薄抹','200℃ · 15′ · 皮 朝上','✓油 滴出 → 倒掉','{lettuce} 包'],
- 24:['{salmon} 切条','{lettuce}{cucumber} → {jianbing} 卷','芥末 一点'],
+ 24:['{salmon} 前晚 → 冷藏 · 切片','{egg} 现成 → 对半','{bread}{lettuce}{tomato} 摆盘','黑胡椒 · 香油几滴 ✗酱'],
  25:['{rawchicken} 冷水下锅','水开 → 小火 12′','关火 焖 5′','手撕 · 菜 ✓蘸','一半 → 明天'],
  26:['鸡胸 撕丝','＋{cucumber}{carrot} 丝','醋 · 生抽少 ✓拌'],
  27:['{tofu} 切块 · 油少 · 煎 → 两面黄','{egg} 液 淋','＋{shrimp}{beef} · 盖盖焖','葱花 · 香菜'],
- 28:['{steak} 回温','黑胡椒','200℃ · 每面 5–6′','静置 3′ → 切'],
+ 28:['{mince} 生抽少 · 抓匀','米 ＋水 → 铺 肉末 → 煮饭键','剩 5′ → 打 {egg} → 盖盖','{lettuce} 最后 · 焖 1′','酱汁：生抽1 水1 ✗糖 ✗老抽 → 淋 · 葱花'],
  101:['{porkchop} 刀背拍松','薄盐 · 黑胡椒','200℃ · 15′ · 中途翻'],
  102:['{beef} 开水烫','{lettuce} 包 饭＋肉','酱 一点 ✓蘸'],
  103:['{egg} ＋温水 1.5 倍 → 打散','{mince} 生抽少 · 抓匀 → 铺上','电饭锅 蒸屉 · 12′','葱花 · 香油几滴'],
  104:['{ribs} 焯水 → 擦干','生抽少 · 蒜末 · 黑胡椒 · 腌 20′','200℃ · 20′ · 中途翻','✓油 滴出 → 倒掉'],
  105:['{ribs} 焯水 → 洗净','＋{carrot} 块 ＋葱姜 ＋水','小火 1.5h','盐少 · 最后放'],
- 106:['{drumstick} 去骨 · 切块','生抽少 · 抓匀','＋{carrot} 丁 ＋米','煮饭键'],
+ 106:['{drumstick} 去骨 · 切块','生抽少 · 抓匀','米 ＋水 比平时少 → {drumstick}{carrot} 铺上','煮饭键','酱汁：生抽1 水1 ✗糖 ✗老抽 → 淋'],
+ 107:['{noodles} 煮熟','{shrimp} 下 → 熟','葱花 · 盐少'],
+ 108:['{steak} 回温','黑胡椒','200℃ · 每面 5–6′','静置 3′ → 切'],
+ 109:['{beef} 开水烫 → 沥干','{lettuce}{cucumber} → {jianbing} 卷'],
+ 110:['{salmon} 切条','{lettuce}{cucumber} → {jianbing} 卷','芥末 一点'],
  0:['调料包 ½','＋{egg} ＋青菜','仅应急']
 };
 /* 三分格餐盘：菜 / 肉蛋豆 / 饭 */
-const SECT={veg:['lettuce','perilla','cilantro','loofah','pumpkin','cucumber','carrot','scallion','garlic','fruit'],
- pro:['tofu','doupi','silken','trotter','rawchicken','egg','rtechicken','shrimp','beef','drumstick','wings','steak','porkchop','porkbelly','mince','ribs','fish','salmon','nuts','milk','yogurt'],
- carb:['rice','noodles','jianbing','instant']};
+const SECT={veg:['tomato','lettuce','perilla','cilantro','loofah','pumpkin','cucumber','carrot','scallion','garlic','fruit'],
+ pro:['tofu','doupi','silken','trotter','rawchicken','egg','rtechicken','shrimp','beef','drumstick','wings','steak','porkchop','porkbelly','mince','ribs','spam','fish','salmon','nuts','milk','yogurt'],
+ carb:['rice','noodles','jianbing','bread','instant']};
 /* ---------- 图标 ---------- */
 const ICON={lettuce:'🥬',perilla:'🍃',cilantro:'🌿',tofu:'@',doupi:'@',silken:'@',loofah:'@',pumpkin:'🎃',trotter:'🐷',mince:'@',ribs:'@',rawchicken:'🐔',
- cucumber:'🥒',carrot:'🥕',scallion:'🧅',garlic:'🧄',egg:'🥚',rtechicken:'@',rice:'🍚',noodles:'🍜',jianbing:'🫓',nuts:'🥜',milk:'🥛',yogurt:'🥣',fruit:'🍎',instant:'@',
+ cucumber:'🥒',carrot:'🥕',scallion:'🧅',garlic:'🧄',egg:'🥚',rtechicken:'@',rice:'🍚',noodles:'🍜',jianbing:'🫓',bread:'🍞',tomato:'🍅',spam:'🥫',nuts:'🥜',milk:'🥛',yogurt:'🥣',fruit:'🍎',instant:'@',
  shrimp:'🦐',beef:'🐄',drumstick:'🍗',wings:'🪽',steak:'🥩',porkchop:'🍖',porkbelly:'🥓',fish:'🐟',salmon:'🍣'};
 /* emoji 里没有的 6 样：手绘，配色贴近 emoji，不随主题变 */
 const SVGI={
@@ -506,6 +516,7 @@ function dayInfo(off){
   return {date:t,before,daysTo:-idx,n:(i%28)+1,cycle:Math.floor(i/28)+1};
 }
 const pill=t=>`<span class="pill t-${t}">${TSYM[t]} ${TIER[t]}</span>`;
+const stylePill=d=>d.st==='w'?'<span class="pill t-w">🥗 白人饭</span>':d.st==='p'?'<span class="pill t-p">🍲 一锅出</span>':'';
 
 /* ---------- 盘子图 ---------- */
 /* 餐盘：上半 = 菜（½），右下 = 肉蛋豆（¼），左下 = 饭（¼） */
@@ -561,7 +572,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSheet()});
 function dishSheet(dish){
   const r=resolve(dish);
   openSheet(dish.n,`
-    <div class="sheet-top">${plate(dish,168)}<div class="sheet-meta">${pill(dish.t)}<span class="sub">${esc(dish.tool)}</span>${dish.d>=1&&dish.d<=28?`<span class="sub">第 ${dish.d} 天</span>`:`<span class="sub">${dish.d?'候补':'应急'}</span>`}</div></div>
+    <div class="sheet-top">${plate(dish,168)}<div class="sheet-meta">${pill(dish.t)}${stylePill(dish)}<span class="sub">${esc(dish.tool)}</span>${dish.d>=1&&dish.d<=28?`<span class="sub">第 ${dish.d} 天</span>`:`<span class="sub">${dish.d?'候补':'应急'}</span>`}</div></div>
     ${r.missing.length?`<div class="verdict left">缺 ${r.missing.map(m=>esc(m.n)).join(' · ')}</div>`:''}
     <div><div class="label">用量</div><ul class="ing">${r.rows.map(x=>`<li class="${x.ok?'':'miss'}"><span class="ing-n">${ico(x.id,26)}${esc(x.n)}${x.opt?'<small class="muted"> 可选</small>':''}</span><span>${esc(x.q)}</span></li>`).join('')}</ul></div>
     <div><div class="label">做法</div>${stepsHtml(dish)}</div>`);
@@ -594,7 +605,7 @@ function renderToday(){
     <div class="hero-plate">${plate(dish,248)}</div>
     <div class="hero-txt">
       <h1 class="dish">${esc(dish.n)}</h1>
-      <div class="meta">${pill(dish.t)}<span>${esc(dish.tool)}</span></div>
+      <div class="meta">${pill(dish.t)}${stylePill(dish)}<span>${esc(dish.tool)}</span></div>
     </div>
     ${r.missing.length?`<div class="verdict left">缺 ${r.missing.map(m=>esc(m.n)).join(' · ')} → 冰箱 换一道</div>`:''}
     ${stepsHtml(dish)}
@@ -793,6 +804,8 @@ function renderLegend(){
     ${sym(ico('tofu',30,'miss'),'缺','冰箱 没勾 → 灰 + 红圈')}
     ${sym('<span class="svd" style="font-size:12px">●●●</span>','还剩几顿','短保食材 · 冰箱页')}
     ${sym('<span class="lg-mx"><span class="mx-on"></span></span>','这顿用掉','吃完计划 矩阵')}
+    ${sym('<span class="pill t-w">🥗 白人饭</span>','白人饭','冷盘 组装 · 每月 2 次')}
+    ${sym('<span class="pill t-p">🍲 一锅出</span>','一锅出','电饭锅 煲仔饭 · 饭菜 一锅')}
     ${sym('🛒','买菜日','日历 右上 小点')}
     ${sym('🧊','今晚解冻','冷冻 → 冷藏')}
     ${sym('<span class="lg-cal"><span class="t-g"></span><span class="t-y"></span><span class="t-r"></span></span>','日历底色','绿 不开火 · 黄 电器 · 红 开火')}
