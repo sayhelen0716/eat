@@ -11,3 +11,10 @@
 
 单文件 `index.html`，无依赖，直接用浏览器打开即可。数据（菜品、食材、采购）都在文件内的 `ING` / `DISH` / `SNACK` / `BUY` / `STOCK` 常量里。
 冰箱勾选和采购勾选保存在当前浏览器的 localStorage，不跨设备同步。
+
+## 托管
+
+- **GitHub Pages**：https://sayhelen0716.github.io/eat/
+- **Cloudflare Pages**：已连接本仓库，推送 `main` 后自动部署；国内访问走自定义域名（`*.pages.dev` 在国内基本打不开）
+- 构建：无构建命令，输出目录为仓库根目录
+
