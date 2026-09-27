@@ -338,10 +338,10 @@ const ING=[
  {id:'rawchicken',n:'生鸡胸',c:'fresh',serv:2,unit:'1 块'},
  {id:'cucumber',n:'黄瓜',c:'keep'},{id:'carrot',n:'胡萝卜',c:'keep'},{id:'scallion',n:'葱',c:'keep'},{id:'garlic',n:'蒜',c:'keep'},
  {id:'egg',n:'鸡蛋',c:'keep'},{id:'rtechicken',n:'即食鸡胸',c:'keep'},{id:'rice',n:'米饭',c:'keep'},{id:'noodles',n:'挂面',c:'keep'},
- {id:'jianbing',n:'煎饼',c:'keep'},{id:'bread',n:'全麦面包',c:'keep'},{id:'tomato',n:'小番茄',c:'keep'},{id:'spam',n:'午餐肉',c:'keep'},{id:'nuts',n:'坚果包',c:'keep'},{id:'milk',n:'纯牛奶',c:'keep'},{id:'yogurt',n:'无糖酸奶',c:'keep'},
+ {id:'jianbing',n:'煎饼',c:'keep'},{id:'bread',n:'全麦面包',c:'keep'},{id:'potato',n:'土豆',c:'keep'},{id:'sweetpotato',n:'红薯',c:'keep'},{id:'corn',n:'玉米',c:'keep'},{id:'tomato',n:'小番茄',c:'keep'},{id:'spam',n:'午餐肉',c:'keep'},{id:'nuts',n:'坚果包',c:'keep'},{id:'milk',n:'纯牛奶',c:'keep'},{id:'yogurt',n:'无糖酸奶',c:'keep'},
  {id:'fruit',n:'水果',c:'keep'},{id:'instant',n:'方便面',c:'keep'},
  {id:'shrimp',n:'虾 / 虾仁',c:'frozen'},{id:'beef',n:'肥牛卷',c:'frozen'},{id:'drumstick',n:'鸡腿',c:'frozen'},{id:'wings',n:'鸡翅',c:'frozen'},
- {id:'steak',n:'牛排',c:'frozen'},{id:'porkchop',n:'猪排',c:'frozen'},{id:'porkbelly',n:'五花肉',c:'frozen'},{id:'trotter',n:'猪蹄',c:'frozen'},{id:'ribs',n:'排骨',c:'frozen'},{id:'mince',n:'肉末',c:'frozen'},{id:'fish',n:'鱼块',c:'frozen'},
+ {id:'steak',n:'牛排',c:'frozen'},{id:'porkchop',n:'猪排',c:'frozen'},{id:'porkbelly',n:'五花肉',c:'frozen'},{id:'trotter',n:'猪蹄',c:'frozen'},{id:'mantou',n:'馒头',c:'frozen'},{id:'ribs',n:'排骨',c:'frozen'},{id:'mince',n:'肉末',c:'frozen'},{id:'fish',n:'鱼块',c:'frozen'},
  {id:'salmon',n:'三文鱼（刺身级）',c:'frozen'}
 ];
 const I=Object.fromEntries(ING.map(x=>[x.id,x]));
@@ -349,7 +349,7 @@ const CLS={fresh:{n:'短保',hint:'2–3 天'},keep:{n:'耐放',hint:'1–3 周'
 const TIER={g:'不开火',y:'电器',r:'开火'};
 
 const DISH=[
- {d:1,n:'蘸酱菜',t:'g',tool:'不用加热',need:[['tofu','半块'],['doupi','半份'],['lettuce','1/3 颗'],['cucumber','1 根'],['scallion','2 根'],['rice','1 碗']],opt:[['cilantro','少许']]},
+ {d:1,n:'蘸酱菜',t:'g',tool:'不用加热',need:[['tofu','半块'],['doupi','半份'],['lettuce','1/3 颗'],['cucumber','1 根'],['scallion','2 根'],['rice|mantou','1 碗 / 1 个']],opt:[['cilantro','少许']]},
  {d:2,n:'豆皮卷',t:'g',tool:'不用加热',need:[['doupi','半份'],['rtechicken','1 袋'],['cucumber','半根'],['lettuce','几片'],['scallion','1 根']]},
  {d:3,n:'电煮锅小火锅',t:'y',tool:'电煮锅',need:[['tofu','半块'],['beef','1 份'],['lettuce','1/3 颗']],opt:[['cilantro','少许']]},
  {d:4,n:'三文鱼紫苏包饭',t:'g',tool:'不用加热',need:[['salmon','1 份'],['perilla','半把'],['rice','1 碗']]},
@@ -361,7 +361,7 @@ const DISH=[
  {d:10,n:'白人饭 · 午餐肉',st:'w',t:'g',tool:'不用加热',need:[['bread','1–2 片'],['spam','2 片'],['lettuce','几片'],['tomato','5–6 个'],['cucumber','半根']]},
  {d:11,n:'丝瓜虾仁汤',t:'y',tool:'电煮锅',need:[['loofah','半根'],['shrimp','1 份'],['rice','1 碗']]},
  {d:12,n:'丝瓜炒蛋',t:'r',tool:'炒锅',need:[['loofah','半根'],['egg','2 个'],['rice','1 碗']]},
- {d:13,n:'空气炸鸡翅',t:'y',tool:'空气炸锅',need:[['wings','4～6 只'],['cucumber','半根'],['carrot','半根'],['rice','1 碗']]},
+ {d:13,n:'空气炸鸡翅 · 薯角',t:'y',tool:'空气炸锅',need:[['wings','4～6 只'],['potato','1 个'],['cucumber','半根']]},
  {d:14,n:'虾仁煲仔饭 · 小葱拌豆腐',st:'p',t:'y',tool:'电饭锅',need:[['shrimp','1 份'],['rice','米 1 杯'],['silken','1 盒'],['scallion','2 根']]},
  {d:15,st:'p',n:'南瓜焖饭 · 即食鸡胸',t:'y',tool:'电饭锅',need:[['pumpkin','1/3 个'],['rice','米 1 杯'],['rtechicken','1 袋']]},
  {d:16,n:'空气炸三文鱼 · 南瓜块',t:'y',tool:'空气炸锅',need:[['salmon','1 份'],['pumpkin','1/3 个']]},
@@ -370,10 +370,10 @@ const DISH=[
  {d:19,n:'烤五花肉 · 生菜紫苏包',t:'y',tool:'空气炸锅',need:[['porkbelly','1 份'],['lettuce','几片'],['garlic','3 瓣'],['rice','1 碗']],opt:[['perilla','几片']]},
  {d:20,n:'肉末蛋爆豆腐',t:'r',tool:'炒锅',need:[['mince','1 份'],['tofu','1 块'],['egg','2 个'],['scallion','1 根'],['rice','1 碗']]},
  {d:21,n:'三文鱼拌饭',t:'g',tool:'不用加热',need:[['salmon','1 份'],['cucumber','半根'],['scallion','1 根'],['rice','1 碗']],opt:[['lettuce','几片'],['perilla','几片']]},
- {d:22,n:'炖猪蹄',t:'y',tool:'电煮锅',need:[['trotter','1 只（吃一半）'],['carrot','1 根'],['scallion','1 根'],['rice','1 碗']]},
+ {d:22,n:'炖猪蹄',t:'y',tool:'电煮锅',need:[['trotter','1 只（吃一半）'],['carrot','1 根'],['scallion','1 根'],['rice|mantou','1 碗 / 1 个']]},
  {d:23,n:'烤猪蹄 · 生菜包',t:'y',tool:'空气炸锅',need:[['trotter','昨天剩的一半'],['lettuce','几片'],['rice','1 碗']]},
  {d:24,n:'白人饭 · 三文鱼',st:'w',t:'g',tool:'不用加热',need:[['bread','1–2 片'],['salmon','1 份'],['egg','1 个（现成水煮蛋）'],['lettuce','几片'],['tomato','5–6 个']]},
- {d:25,n:'白切鸡胸',t:'y',tool:'电煮锅',need:[['rawchicken','半块'],['cucumber','半根'],['scallion','1 根'],['rice','1 碗']],opt:[['lettuce','几片']]},
+ {d:25,n:'白切鸡胸',t:'y',tool:'电煮锅',need:[['rawchicken','半块'],['cucumber','半根'],['scallion','1 根'],['rice|mantou','1 碗 / 1 个']],opt:[['lettuce','几片']]},
  {d:26,n:'凉拌鸡丝',t:'g',tool:'不用加热',need:[['rawchicken|rtechicken','半块 / 1 袋'],['cucumber','半根'],['carrot','半根'],['rice','1 碗']],opt:[['cilantro','少许']]},
  {d:27,n:'豆腐抱蛋',t:'r',tool:'炒锅',need:[['tofu','1 块'],['egg','2 个'],['shrimp','几只'],['beef','几片'],['scallion','1 根'],['rice','1 碗']],opt:[['cilantro','少许']]},
  {d:28,n:'肉末鸡蛋煲仔饭',st:'p',t:'y',tool:'电饭锅',need:[['mince','1 份'],['egg','1 个'],['scallion','1 根'],['rice','米 1 杯']],opt:[['lettuce','几片']]},
@@ -387,6 +387,9 @@ const DISH=[
  {d:108,n:'空气炸牛排',t:'y',tool:'空气炸锅',need:[['steak','1 块'],['cucumber','半根'],['carrot','半根']]},
  {d:109,n:'煎饼卷肥牛',t:'y',tool:'烧水',need:[['jianbing','1 张'],['beef','1 份'],['lettuce','几片'],['cucumber','半根']]},
  {d:110,n:'三文鱼煎饼卷',t:'g',tool:'不用加热',need:[['salmon','1 份'],['jianbing','1 张'],['lettuce','几片'],['cucumber','半根']]},
+ {d:111,n:'烤馒头片 · 蛋 · 黄瓜',t:'y',tool:'空气炸锅',need:[['mantou','1 个'],['egg','1 个（现成水煮蛋）'],['cucumber','半根']],opt:[['scallion','少许']]},
+ {d:112,n:'空气炸薯条 · 鸡胸',t:'y',tool:'空气炸锅',need:[['potato','1 个'],['rtechicken','1 袋']],opt:[['lettuce','几片']]},
+ {d:113,n:'烤红薯 · 牛奶 · 鸡蛋',t:'y',tool:'空气炸锅',need:[['sweetpotato','1 个'],['milk','1 盒'],['egg','1 个（现成水煮蛋）']]},
  {d:0,n:'方便面（应急）',t:'y',tool:'电煮锅',need:[['instant','1 包']],opt:[['egg','1 个'],['lettuce','几片']]}
 ];
 const SNACK=[
@@ -403,6 +406,10 @@ const SNACK=[
  {n:'白灼虾几只',need:[['shrimp','几只']]},
  {n:'水果 1 份',need:[['fruit','1 份']]},
  {n:'小番茄 一把',need:[['tomato','一把']]},
+ {n:'烤馒头片 半个',need:[['mantou','半个']]},
+ {n:'空气炸薯条 半个土豆',need:[['potato','半个']]},
+ {n:'烤红薯 小半个',need:[['sweetpotato','小半个']]},
+ {n:'蒸玉米 半根',need:[['corn','半根']]},
  {n:'半张煎饼卷生菜',need:[['jianbing','半张'],['lettuce','几片']]}
 ];
 const BUY={
@@ -417,7 +424,7 @@ const BUY={
 };
 const STOCK={
  '冷冻（按顿分装）':['虾仁 3～4 份','肥牛卷 3 份','鸡腿 2 只','排骨 1 份','鸡翅 1 份','五花肉 1 份','猪蹄 1 只（切块）','肉末 2 份','鱼块 1 份','刺身级三文鱼 4 份'],
- '耐放':['鸡蛋 1 盒','即食鸡胸 5 袋','挂面','煎饼','全麦面包（切片冷冻）','午餐肉 1 小罐','米','坚果包','常温纯牛奶'],
+ '耐放':['鸡蛋 1 盒','即食鸡胸 5 袋','挂面','煎饼','全麦面包（切片冷冻）','馒头 1 袋（冷冻）','土豆 2–3 个','红薯 2 个','玉米 2 根（真空）','午餐肉 1 小罐','米','坚果包','常温纯牛奶'],
  '调料':['大酱','低钠生抽','醋','香油','番茄酱','芥末','黑胡椒']
 };
 
@@ -436,7 +443,7 @@ const STEPS={
  10:['{bread} 1–2 片','{spam} 2 片 · 直接 或 180℃ 5′','{lettuce}{tomato}{cucumber} 摆盘','✗酱 · 午餐肉 已够咸'],
  11:['{loofah} 去皮 · 切块','水开 → 丝瓜 2′','{shrimp} 下 → 熟','盐少'],
  12:['油少 · {egg} 炒 → 盛出','{loofah} 炒软','蛋 回锅 · 盐少'],
- 13:['{wings} 划刀 · 生抽薄抹 · 黑胡椒','200℃ · 18′ · 中途翻','配 {cucumber}{carrot} 条'],
+ 13:['{potato} 切角 · 泡水 10′ → 擦干','{wings} 划刀 · 生抽薄抹 · 黑胡椒','薯角 先 200℃ · 8′','＋{wings} · 200℃ · 18′ · 中途翻','配 {cucumber} 条'],
  14:['米 洗 → 电饭锅 · 水 比平时少','煮饭键 → 剩 10′','＋{shrimp} 铺上 → 盖盖','酱汁：生抽1 水1 ✗糖 ✗老抽 → 淋','{silken} 倒扣 · 葱花 · 生抽几滴'],
  15:['{pumpkin} 切小块','＋米 → 电饭锅','水 比平时少','煮饭键'],
  16:['{pumpkin} 200℃ · 8′','＋{salmon} · 10′','✓黑胡椒 ✗酱'],
@@ -462,15 +469,18 @@ const STEPS={
  108:['{steak} 回温','黑胡椒','200℃ · 每面 5–6′','静置 3′ → 切'],
  109:['{beef} 开水烫 → 沥干','{lettuce}{cucumber} → {jianbing} 卷'],
  110:['{salmon} 切条','{lettuce}{cucumber} → {jianbing} 卷','芥末 一点'],
+ 111:['{mantou} 切片 1cm','✗油 或 刷薄油','180℃ · 6–8′ · 中途翻','{egg}{cucumber} 配上 · 补蛋白'],
+ 112:['{potato} 切条 · 泡水 10′ → 擦干','油 1 小勺 · 盐少','200℃ · 18′ · 中途摇','{rtechicken} 撕 · 番茄酱 ✓少'],
+ 113:['{sweetpotato} 洗净 · 带皮','200℃ · 35–40′','✗糖','{milk}{egg} 配上'],
  0:['调料包 ½','＋{egg} ＋青菜','仅应急']
 };
 /* 三分格餐盘：菜 / 肉蛋豆 / 饭 */
 const SECT={veg:['tomato','lettuce','perilla','cilantro','loofah','pumpkin','cucumber','carrot','scallion','garlic','fruit'],
  pro:['tofu','doupi','silken','trotter','rawchicken','egg','rtechicken','shrimp','beef','drumstick','wings','steak','porkchop','porkbelly','mince','ribs','spam','fish','salmon','nuts','milk','yogurt'],
- carb:['rice','noodles','jianbing','bread','instant']};
+ carb:['rice','mantou','potato','sweetpotato','corn','noodles','jianbing','bread','instant']};
 /* ---------- 图标 ---------- */
 const ICON={lettuce:'🥬',perilla:'🍃',cilantro:'🌿',tofu:'@',doupi:'@',silken:'@',loofah:'@',pumpkin:'🎃',trotter:'🐷',mince:'@',ribs:'@',rawchicken:'🐔',
- cucumber:'🥒',carrot:'🥕',scallion:'🧅',garlic:'🧄',egg:'🥚',rtechicken:'@',rice:'🍚',noodles:'🍜',jianbing:'🫓',bread:'🍞',tomato:'🍅',spam:'🥫',nuts:'🥜',milk:'🥛',yogurt:'🥣',fruit:'🍎',instant:'@',
+ cucumber:'🥒',carrot:'🥕',scallion:'🧅',garlic:'🧄',egg:'🥚',rtechicken:'@',rice:'🍚',noodles:'🍜',jianbing:'🫓',bread:'🍞',potato:'🥔',sweetpotato:'🍠',corn:'🌽',mantou:'@',tomato:'🍅',spam:'🥫',nuts:'🥜',milk:'🥛',yogurt:'🥣',fruit:'🍎',instant:'@',
  shrimp:'🦐',beef:'🐄',drumstick:'🍗',wings:'🪽',steak:'🥩',porkchop:'🍖',porkbelly:'🥓',fish:'🐟',salmon:'🍣'};
 /* emoji 里没有的 6 样：手绘，配色贴近 emoji，不随主题变 */
 const SVGI={
@@ -481,6 +491,7 @@ const SVGI={
  rtechicken:'<rect x="5" y="5" width="22" height="23" rx="4" fill="#E6EDF1" stroke="#93A9B7" stroke-width="1.3"/><path d="M5.5 10h21" stroke="#93A9B7" stroke-width="1.1" stroke-dasharray="2 1.8"/><path d="M10.5 15.5c2.6-2.4 9.4-2.6 11.6 1.2 2.1 3.8-1 8.3-6 8.3-4.6 0-8.3-5.4-5.6-9.5z" fill="#F3CDA8" stroke="#C88C5E" stroke-width="1.2" stroke-linejoin="round"/><path d="M13 18.5c2-.8 4.5-.8 6.5.3" stroke="#DDA578" stroke-width="1" stroke-linecap="round" fill="none"/>',
  mince:'<path d="M4 15h24l-2 8.5a3 3 0 0 1-2.9 2.5H8.9A3 3 0 0 1 6 23.5z" fill="#E9EEF1" stroke="#8FA3AF" stroke-width="1.3" stroke-linejoin="round"/><path d="M6.5 15c.5-3.2 3-5 5.2-4.4 1-2.4 4.5-3 6.3-1.2 2.2-1.3 5.4.2 5.6 2.6 1.4.4 2.2 1.6 2 3" fill="#D9826B" stroke="#A9533F" stroke-width="1.2" stroke-linejoin="round"/><circle cx="11" cy="13" r=".9" fill="#F2B7A5"/><circle cx="16" cy="11.5" r=".9" fill="#F2B7A5"/><circle cx="20.5" cy="13" r=".9" fill="#F2B7A5"/><circle cx="14" cy="14.2" r=".8" fill="#B85E48"/><circle cx="18.5" cy="14.3" r=".8" fill="#B85E48"/>',
  ribs:'<path d="M5 11.5c0-2 1.6-3.5 3.6-3.5h14.8c2 0 3.6 1.5 3.6 3.5v9c0 2-1.6 3.5-3.6 3.5H8.6C6.6 24 5 22.5 5 20.5z" fill="#C8734E" stroke="#8E4428" stroke-width="1.3"/><path d="M8 12.5c3-1 13-1 16 0" stroke="#E0976F" stroke-width="1.4" stroke-linecap="round" fill="none"/><g fill="#FBF3E4" stroke="#B9A889" stroke-width="1.1"><rect x="8.2" y="22" width="3.4" height="6" rx="1.7"/><rect x="14.3" y="22" width="3.4" height="6" rx="1.7"/><rect x="20.4" y="22" width="3.4" height="6" rx="1.7"/></g><path d="M9.9 15v5M16 15v5M22.1 15v5" stroke="#A85A38" stroke-width="1" stroke-linecap="round"/>',
+ mantou:'<path d="M4 23c0-8.5 5.2-14 12-14s12 5.5 12 14z" fill="#FFFDF6" stroke="#C3B794" stroke-width="1.3" stroke-linejoin="round"/><path d="M3 23h26" stroke="#C3B794" stroke-width="1.5" stroke-linecap="round"/><path d="M11 13.5c1.5 1.8 1.8 4.5 1 7M16 11.5c.8 2.5.8 6 0 9.5M21 13.5c-1.5 1.8-1.8 4.5-1 7" stroke="#E4DCC4" stroke-width="1.1" stroke-linecap="round" fill="none"/>',
  instant:'<rect x="4" y="8" width="24" height="17" rx="3.5" fill="#F4C95B" stroke="#BF8E25" stroke-width="1.3"/><path d="M7 12.5c1.5-1.5 3-1.5 4.5 0s3 1.5 4.5 0 3-1.5 4.5 0 3 1.5 4.5 0M7 16.5c1.5-1.5 3-1.5 4.5 0s3 1.5 4.5 0 3-1.5 4.5 0 3 1.5 4.5 0M7 20.5c1.5-1.5 3-1.5 4.5 0s3 1.5 4.5 0 3-1.5 4.5 0 3 1.5 4.5 0" stroke="#D9A437" stroke-width="1.3" fill="none" stroke-linecap="round"/>'
 };
 function ico(id,s=28,extra=''){
