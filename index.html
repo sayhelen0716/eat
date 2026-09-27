@@ -25,13 +25,16 @@
   --g:#74C394; --g-soft:#1F3326; --y:#E3AE55; --y-soft:#3A2E17; --r:#EC8870; --r-soft:#3D231C;
 }
 *{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{overflow-x:hidden}
+.wrap>*,.panel>*,.daycard>*,.card>*{min-width:0}
 body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.6;padding-inline:16px;padding-block:0 48px}
 .wrap{max-width:720px;margin:0 auto}
 h1,h2,h3{font-family:var(--display);font-weight:400;text-wrap:balance;margin:0;letter-spacing:.02em}
 header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:14px 10px;display:flex;flex-direction:column;gap:10px;border-bottom:1px solid var(--line)}
 .brand{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
 .brand h1{font-size:26px}
-.brand small{color:var(--muted);font-size:12px}
+.brand small{color:var(--muted);font-size:12px;text-align:right;min-width:0}
 nav.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;background:var(--sunk);border-radius:10px;padding:4px}
 nav.tabs a{text-align:center;text-decoration:none;color:var(--muted);padding:7px 0;border-radius:7px;font-size:14px}
 nav.tabs a[aria-current="page"]{background:var(--surface);color:var(--ink);font-weight:600;box-shadow:0 1px 2px rgb(0 0 0 / .08)}
@@ -77,7 +80,7 @@ ul.ing li.miss span:first-child{color:var(--r);font-weight:600}
 /* fridge */
 .group h3{font-size:17px;display:flex;align-items:baseline;gap:8px}
 .group h3 small{font-family:var(--body);font-size:12px;color:var(--muted)}
-.stepper{display:grid;grid-template-columns:1fr auto;gap:8px 12px;align-items:center}
+.stepper{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px 12px;align-items:center}
 .stepper .ctl{display:flex;align-items:center;gap:6px}
 .stepper .ctl button{width:30px;height:30px;border-radius:8px;border:1px solid var(--line);background:var(--surface);font-size:16px;line-height:1}
 .stepper .ctl output{min-width:48px;text-align:center}
@@ -97,7 +100,7 @@ ul.ing li.miss span:first-child{color:var(--r);font-weight:600}
 
 /* month */
 details.day{border-bottom:1px solid var(--line)}
-details.day summary{list-style:none;display:grid;grid-template-columns:44px 1fr auto;gap:8px;align-items:center;padding:10px 2px;cursor:pointer}
+details.day summary{list-style:none;display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:8px;align-items:center;padding:10px 2px;cursor:pointer}
 details.day summary::-webkit-details-marker{display:none}
 details.day summary .d{color:var(--muted);font-size:13px}
 details.day.is-today summary .d{color:var(--accent);font-weight:700}
