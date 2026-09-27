@@ -1,7 +1,7 @@
 {
-  // Cloudflare Workers 静态托管：仓库根目录就是网页
+  // Cloudflare Workers 静态托管：只发布 docs/ 目录
   "name": "eat",
   "compatibility_date": "2026-09-01",
-  "assets": { "directory": "./" },
+  "assets": { "directory": "./docs" },
   "preview_urls": false
 }
