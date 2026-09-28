@@ -287,6 +287,15 @@ details.adj summary::-webkit-details-marker{display:none}
 .vhead h1 .brandmark{width:30px;height:30px}
 .back-today{min-height:36px;padding:0 14px;border-radius:18px;background:var(--accent);color:var(--on-accent);font-size:14px;font-weight:600;box-shadow:0 2px 8px rgb(0 0 0 / .15)}
 
+/* 新食材 */
+.ico.b1{font-size:calc(var(--s)*.5);background:var(--accent-soft);color:var(--accent);border-radius:50%}
+.addbtn{min-height:48px;border-radius:14px;border:1.5px dashed var(--accent);color:var(--accent);font-weight:600;font-size:15px;background:transparent}
+.addform{display:flex;flex-direction:column;gap:14px}
+.fl{display:flex;flex-direction:column;gap:6px}
+.fl input{font:inherit;font-size:16px;color:var(--ink);background:var(--sunk);border:0;border-radius:10px;padding:10px 12px;min-height:44px}
+.primary{min-height:48px;border-radius:12px;background:var(--accent);color:var(--on-accent);font-weight:600;font-size:16px}
+.ing li .btn-quiet{min-height:32px}
+
 @media (prefers-reduced-motion:no-preference){
   .sheet{transition:transform .28s cubic-bezier(.2,.8,.2,1)}
   .scrim{transition:opacity .2s}
@@ -502,6 +511,7 @@ const SVGI={
 };
 function ico(id,s=28,extra=''){
   const v=ICON[id]||'?';
+  if(v[0]==='#')return `<span class="ico b b1 ${extra}" style="--s:${s}px" aria-hidden="true">${esc(v.slice(1))}</span>`;
   return v==='@'
     ?`<span class="ico svg ${extra}" style="--s:${s}px" aria-hidden="true"><svg viewBox="0 0 32 32" width="100%" height="100%">${SVGI[id]}</svg></span>`
     :`<span class="ico ${extra}" style="--s:${s}px" aria-hidden="true">${v}</span>`;
@@ -513,7 +523,7 @@ const KEY='dzfz-v1';
 const DEFAULT_HAVE=['rice','egg','scallion','garlic','cucumber','carrot','rtechicken','noodles','jianbing','nuts','milk','shrimp','beef','drumstick','salmon','lettuce'];
 function iso(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
 function nextMonday(){const t=new Date();t.setHours(0,0,0,0);const w=t.getDay();t.setDate(t.getDate()+(w===1?0:(8-w)%7));return iso(t)}
-let S={start:nextMonday(),have:DEFAULT_HAVE,qty:{},hideFire:false,checks:{},fview:'have',mview:'cal'};
+let S={start:nextMonday(),have:DEFAULT_HAVE,qty:{},hideFire:false,checks:{},fview:'have',mview:'cal',custom:[]};
 try{const raw=localStorage.getItem(KEY);if(raw)S=Object.assign(S,JSON.parse(raw));}catch(e){}
 let offset=0;
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
@@ -543,7 +553,7 @@ function dayInfo(off){
   return {date:t,before,daysTo:-idx,n:(i%28)+1,cycle:Math.floor(i/28)+1};
 }
 const pill=t=>`<span class="pill t-${t}">${TSYM[t]} ${TIER[t]}</span>`;
-const stylePill=d=>d.st==='w'?'<span class="pill t-w">🥗 白人饭</span>':d.st==='p'?'<span class="pill t-p">🍲 一锅出</span>':'';
+const stylePill=d=>(d.gen?'<span class="pill t-p">🧩 自动</span>':'')+(d.st==='w'?'<span class="pill t-w">🥗 白人饭</span>':d.st==='p'?'<span class="pill t-p">🍲 一锅出</span>':'');
 
 /* ---------- 盘子图 ---------- */
 /* 餐盘：上半 = 菜（½），右下 = 肉蛋豆（¼），左下 = 饭（¼） */
@@ -599,7 +609,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSheet()});
 function dishSheet(dish){
   const r=resolve(dish);
   openSheet(dish.n,`
-    <div class="sheet-top">${plate(dish,168)}<div class="sheet-meta">${pill(dish.t)}${stylePill(dish)}<span class="sub">${esc(dish.tool)}</span>${dish.d>=1&&dish.d<=28?`<span class="sub">第 ${dish.d} 天</span>`:`<span class="sub">${dish.d?'候补':'应急'}</span>`}</div></div>
+    <div class="sheet-top">${plate(dish,168)}<div class="sheet-meta">${pill(dish.t)}${stylePill(dish)}<span class="sub">${esc(dish.tool)}</span>${dish.d>=1&&dish.d<=28?`<span class="sub">第 ${dish.d} 天</span>`:`<span class="sub">${dish.gen?'自动生成':dish.d?'候补':'应急'}</span>`}</div></div>
     ${r.missing.length?`<div class="verdict left">缺 ${r.missing.map(m=>esc(m.n)).join(' · ')}</div>`:''}
     <div><div class="label">用量</div><ul class="ing">${r.rows.map(x=>`<li class="${x.ok?'':'miss'}"><span class="ing-n">${ico(x.id,26)}${esc(x.n)}${x.opt?'<small class="muted"> 可选</small>':''}</span><span>${esc(x.q)}</span></li>`).join('')}</ul></div>
     <div><div class="label">做法</div>${stepsHtml(dish)}</div>`);
@@ -695,7 +705,7 @@ function renderFridge(){
       <div class="group">
         <h2>${CLS[c].n}<small>${CLS[c].hint}</small></h2>
         <div class="tiles">${ING.filter(x=>x.c===c).map(x=>`<button class="tile" data-ing="${x.id}" aria-pressed="${has(x.id)}">${ico(x.id,34)}<span class="tn">${esc(x.n.replace(/（.*）/,''))}</span>${c==='fresh'&&has(x.id)?`<span class="svd" aria-label="还剩 ${qtyOf(x.id)} 顿">${'●'.repeat(Math.min(qtyOf(x.id),5))}</span>`:''}</button>`).join('')}</div>
-      </div>`).join('')+`<p class="sub" style="margin:0">调料 默认有 · 不用勾</p>`;
+      </div>`).join('')+`<button class="addbtn" id="add-ing" type="button">＋ 新食材 · 自动出菜</button><p class="sub" style="margin:0">调料 默认有 · 不用勾</p>`;
   }else{
     const freshHave=S.have.filter(id=>I[id].c==='fresh');
     const {picked,start,rem}=planMeals(ok);
@@ -744,6 +754,7 @@ function renderFridge(){
   v.querySelectorAll('[data-dish]').forEach(b=>b.onclick=()=>dishSheet(DISH.find(d=>String(d.d)===b.dataset.dish)));
   v.querySelectorAll('[data-inc]').forEach(b=>b.onclick=()=>{const id=b.dataset.inc;S.qty[id]=Math.min(9,qtyOf(id)+1);save();renderFridgeKeepAdj()});
   v.querySelectorAll('[data-dec]').forEach(b=>b.onclick=()=>{const id=b.dataset.dec;S.qty[id]=Math.max(1,qtyOf(id)-1);save();renderFridgeKeepAdj()});
+  const ai=document.getElementById('add-ing');if(ai)ai.onclick=()=>addIngSheet();
   const hf=document.getElementById('hide-fire');if(hf)hf.onclick=()=>{S.hideFire=!S.hideFire;save();renderFridge()};
 }
 function renderFridgeKeepAdj(){renderFridge();const d=document.querySelector('#v-fridge details.adj');if(d)d.open=true}
@@ -846,9 +857,82 @@ function renderLegend(){
     const sn=SNACK.filter(sk=>sk.need.some(([k])=>k===id)).map(sk=>sk.n);
     openSheet(x.n,`
       <div class="sheet-top">${ico(id,72)}<div class="sheet-meta"><span class="pill t-${x.c==='fresh'?'r':x.c==='frozen'?'y':'g'}">${keep[x.c]}</span>${x.serv?`<span class="sub">${esc(x.unit)} ≈ ${x.serv} 顿</span>`:''}<span class="sub">${CLS[x.c].hint}</span></div></div>
-      ${ds.length?`<div><div class="label">用在 ${ds.length} 道菜</div><div class="list">${ds.map(d=>`<button data-dish="${d.d}">${plateMini(d)}<span class="tx"><strong>${esc(d.n)}</strong><span>${d.d>=1&&d.d<=28?'第 '+d.d+' 天':d.d?'候补':'应急'} · ${TIER[d.t]}</span></span><span class="chev">›</span></button>`).join('')}</div></div>`:''}
+      ${ds.length?`<div><div class="label">用在 ${ds.length} 道菜</div><div class="list">${ds.map(d=>`<button data-dish="${d.d}">${plateMini(d)}<span class="tx"><strong>${esc(d.n)}</strong><span>${d.d>=1&&d.d<=28?'第 '+d.d+' 天':d.gen?'自动':d.d?'候补':'应急'} · ${TIER[d.t]}</span></span><span class="chev">›</span></button>`).join('')}</div></div>`:''}
       ${sn.length?`<div><div class="label">加餐</div><div class="chips">${sn.map(n=>`<span class="snk">${esc(n)}</span>`).join('')}</div></div>`:''}`);
     document.querySelectorAll('#sheet-body [data-dish]').forEach(el=>el.onclick=()=>dishSheet(DISH.find(d=>String(d.d)===el.dataset.dish)));
+  });
+}
+
+/* ---------- 自定义食材 + 模板出菜 ---------- */
+const GEN_BASE=500;
+const SEC_N={veg:'菜',pro:'肉蛋豆',carb:'饭'};
+function templates(c){
+  const X=c.id,N=c.n,T=`{${X}}`,SAUCE='酱汁：生抽1 水1 ✗糖';
+  if(c.sec==='pro')return [
+    {n:`${N}煲仔饭`,st:'p',t:'y',tool:'电饭锅',need:[[X,'1 份'],['rice','米 1 杯']],opt:[['lettuce','几片']],steps:[`${T} 切片 · 生抽少 · 抓匀`,'米 ＋水 比平时少 → 铺上 → 煮饭键','{lettuce} 最后 · 焖 1′',SAUCE]},
+    {n:`空气炸${N}`,t:'y',tool:'空气炸锅',need:[[X,'1 份'],['cucumber','半根']],steps:[`${T} 擦干 · 薄盐 · 黑胡椒`,'200℃ · 12–20′ · 中途翻（按厚薄调）','✓油 滴出 → 倒掉','配 {cucumber}']},
+    {n:`${N}生菜包饭`,t:'y',tool:'烧水',need:[[X,'1 份'],['lettuce','几片'],['rice|mantou','1 碗 / 1 个']],steps:[`${T} 烫熟 或 用现成熟的`,'{lettuce} 包 饭＋肉','酱 一点 ✓蘸']},
+    {n:`蒸${N} · 馒头`,t:'y',tool:'电饭锅',need:[[X,'1 份'],['mantou','1 个']],opt:[['cucumber','半根']],steps:[`${T} 切片 · {mantou} 一起 → 蒸屉`,'上汽 15′ · 生肉 20′ 以上 → 蒸透','{cucumber} 配上 · ✗再加盐']}
+  ];
+  if(c.sec==='veg')return c.raw?[
+    {n:`${N}蘸酱菜`,t:'g',tool:'不用加热',need:[[X,'1 份'],['tofu|doupi|rtechicken','半块 / 半份 / 1 袋'],['rice|mantou','1 碗 / 1 个']],steps:[`${T} 洗 · 切条`,'酱 → 小碟','✓蘸 ✗拌']},
+    {n:`凉拌${N}`,t:'g',tool:'不用加热',need:[[X,'1 份'],['garlic','2 瓣'],['rtechicken|egg','1 袋 / 1 个']],steps:[`${T} 洗 · 切丝 或 拍`,'蒜末 · 醋 · 生抽几滴 · 香油','✓拌 · 配 鸡胸/蛋']}
+  ]:[
+    {n:`白灼${N}`,t:'y',tool:'烧水',need:[[X,'1 份'],['rtechicken|egg','1 袋 / 1 个'],['rice|mantou','1 碗 / 1 个']],steps:['水开 · 几滴油',`${T} 烫 1–2′ → 捞`,'蒜末 · 生抽几滴 → 淋','配 鸡胸/蛋']},
+    {n:`${N}蛋花汤`,t:'y',tool:'电煮锅',need:[[X,'1 份'],['egg','1 个']],opt:[['scallion','少许']],steps:[`水开 → ${T} 煮软`,'{egg} 打散 → 淋入','盐少 · 葱花']}
+  ];
+  return [
+    {n:`蒸${N} · 鸡蛋`,t:'y',tool:'电饭锅',need:[[X,'1 份'],['egg','1 个']],opt:[['cucumber','半根']],steps:[`${T} → 蒸屉 · {egg} 一起`,'上汽 15–20′ · 筷子能插透','配 {cucumber}']},
+    {n:`烤${N} · 鸡胸`,t:'y',tool:'空气炸锅',need:[[X,'1 份'],['rtechicken','1 袋']],steps:[`${T} 切片/块 · ✗油 或 刷薄油`,'180–200℃ · 8–15′ · 中途翻','{rtechicken} 撕 · 配上']}
+  ];
+}
+function applyCustom(){
+  if(!Array.isArray(S.custom))S.custom=[];
+  for(let i=ING.length-1;i>=0;i--)if(ING[i].custom){delete I[ING[i].id];ING.splice(i,1)}
+  for(let i=DISH.length-1;i>=0;i--)if(DISH[i].gen)DISH.splice(i,1);
+  Object.keys(STEPS).forEach(k=>{if(+k>=GEN_BASE)delete STEPS[k]});
+  Object.keys(SECT).forEach(k=>{SECT[k]=SECT[k].filter(id=>!id.startsWith('c_'))});
+  let n=GEN_BASE;
+  for(const c of S.custom){
+    const x={id:c.id,n:c.n,c:c.c,custom:true};if(c.c==='fresh'){x.serv=c.serv||2;x.unit='1 份'}
+    ING.push(x);I[c.id]=x;ICON[c.id]='#'+[...c.n][0];SECT[c.sec].push(c.id);
+    for(const t of templates(c)){STEPS[n]=t.steps;delete t.steps;DISH.push({...t,d:n,gen:true});n++}
+  }
+}
+function rerenderAll(){renderToday();renderFridge();renderMonth();renderLegend()}
+function addIngSheet(msg){
+  const segBtns=(opts,def)=>opts.map(([k,n])=>`<button type="button" data-v="${k}" aria-pressed="${k===def}">${n}</button>`).join('');
+  openSheet('新食材',`
+    ${msg?`<div class="verdict ok">${msg}</div>`:''}
+    <form id="ing-form" class="addform" novalidate>
+      <label class="fl" for="ing-name"><span class="label">名字</span><input id="ing-name" maxlength="8" autocomplete="off" placeholder="比如 腊鸭、西兰花、年糕"></label>
+      <div class="fl"><span class="label">放进餐盘哪一格</span><div class="seg" id="ing-sec">${segBtns([['veg','菜'],['pro','肉蛋豆'],['carb','饭']],'pro')}</div></div>
+      <div class="fl"><span class="label">怎么保存</span><div class="seg" id="ing-keep">${segBtns([['fresh','短保'],['frozen','冷冻'],['keep','耐放']],'keep')}</div></div>
+      <label class="toggle" id="raw-row" hidden><input type="checkbox" id="ing-raw"> 能生吃（→ 蘸酱 / 凉拌；不勾 → 白灼 / 蛋花汤）</label>
+      <div class="verdict left" id="ing-err" hidden></div>
+      <button class="primary" type="submit">加进冰箱 · 自动出菜</button>
+    </form>
+    ${S.custom.length?`<div><div class="label">已加的</div><ul class="ing">${S.custom.map(c=>`<li><span class="ing-n">${ico(c.id,26)}${esc(c.n)} <small class="muted">${SEC_N[c.sec]} · ${CLS[c.c].n}${c.raw?' · 生吃':''}</small></span><button class="btn-quiet" type="button" data-del="${c.id}">删除</button></li>`).join('')}</ul></div>`:''}
+    <p class="sub" style="margin:0">按模板拼菜 · 少油少盐 · 只存在这台手机。想长期排进月菜单 → 找 Claude 精调</p>`);
+  const body=document.getElementById('sheet-body');
+  const val=g=>body.querySelector(`#${g} button[aria-pressed="true"]`).dataset.v;
+  const syncRaw=()=>{document.getElementById('raw-row').hidden=val('ing-sec')!=='veg'};
+  ['ing-sec','ing-keep'].forEach(g=>body.querySelectorAll(`#${g} button`).forEach(b=>b.onclick=()=>{body.querySelectorAll(`#${g} button`).forEach(x=>x.setAttribute('aria-pressed',String(x===b)));syncRaw()}));
+  syncRaw();
+  document.getElementById('ing-form').onsubmit=e=>{
+    e.preventDefault();
+    const err=document.getElementById('ing-err');
+    const n=document.getElementById('ing-name').value.trim();
+    if(!n){err.textContent='先填名字';err.hidden=false;return}
+    if(ING.some(x=>x.n.replace(/（.*）/,'')===n)){err.textContent=`「${n}」已经有了 → 冰箱里直接勾`;err.hidden=false;return}
+    const c={id:'c_'+Date.now().toString(36),n,sec:val('ing-sec'),c:val('ing-keep'),raw:val('ing-sec')==='veg'&&document.getElementById('ing-raw').checked,serv:2};
+    S.custom=[...S.custom,c];S.have=[...S.have,c.id];save();applyCustom();rerenderAll();
+    const cnt=DISH.filter(d=>d.gen&&d.need.some(([k])=>k===c.id)).length;
+    addIngSheet(`✓ 已加「${esc(n)}」· 生成 ${cnt} 道 → 冰箱「能做」`);
+  };
+  body.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{
+    const id=b.dataset.del;S.custom=S.custom.filter(c=>c.id!==id);S.have=S.have.filter(x=>x!==id);delete S.qty[id];
+    save();applyCustom();rerenderAll();addIngSheet();
   });
 }
 
@@ -864,6 +948,7 @@ function route(){
 document.getElementById('cta-btn').onclick=()=>{S.fview='can';save();renderFridge();document.getElementById('cta').hidden=true;window.scrollTo(0,0)};
 window.addEventListener('hashchange',route);
 document.querySelector('.tabbar a[data-tab="today"]').addEventListener('click',()=>{if(offset!==0){offset=0;renderToday()}});
+applyCustom();
 renderToday();renderFridge();renderMonth();renderLegend();route();
 </script>
 </body>
